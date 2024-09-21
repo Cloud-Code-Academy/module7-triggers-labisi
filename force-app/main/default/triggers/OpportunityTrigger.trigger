@@ -4,7 +4,7 @@ trigger OpportunityTrigger on Opportunity (before update, before delete) {
       if (opp.Amount < 5000) {
           opp.addError('Opportunity amount must be greater than 5000');
       }
-  
+    if (trigger.isbefore) {
       Set<Id> accountIds = new Set<Id>();
           accountIds.add(opp.AccountId);
           Map<Id, Contact> accountToContactMap = new Map<Id, Contact>();
@@ -18,6 +18,7 @@ trigger OpportunityTrigger on Opportunity (before update, before delete) {
           }
          }
         }
+    }    
   }
   
 
