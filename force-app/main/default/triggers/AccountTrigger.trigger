@@ -1,5 +1,5 @@
 trigger AccountTrigger on Account (before insert,after insert) {
-    
+    if (trigger.isBefore) {
         for (Account acc : Trigger.new) {
             if (acc.Type == null) {
                 acc.Type = 'Prospect';
@@ -17,6 +17,8 @@ trigger AccountTrigger on Account (before insert,after insert) {
             acc.rating = 'Hot';
         }       
     }
+    }
+       
     List <Contact> newContacts = new List<Contact>();
     if (trigger.isAfter) {
        if (trigger.isInsert) {
