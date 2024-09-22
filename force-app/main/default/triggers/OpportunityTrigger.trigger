@@ -8,24 +8,24 @@ trigger OpportunityTrigger on Opportunity (before update,after update, before de
         
   
 
-  if (Trigger.isBefore && Trigger.isDelete) {
-    Set <Id> accountIds = new Set<Id>();
-    for (Opportunity opp : Trigger.old) {
-       accountIds.add(opp.AccountId);
-    }
-    Map <Id, Account> accountsWithBanking = new Map<Id, Account>();
-    List<Account> accountsForOpps = [SELECT Id, Industry FROM Account WHERE Id IN :accountIds];
-    for (Account acc : accountsForOpps) {
-      if (acc.Industry == 'Banking') {
-        accountsWithBanking.put(acc.Id, acc);
-      }
-    }
-    for (Opportunity opp : Trigger.old) {
-      if (opp.StageName == 'Closed Won' && accountsWithBanking.containsKey(opp.AccountId)) {
-        opp.addError('Cannot delete closed opportunity for a banking account that is won');
-      }
-    }
-    }
+         if (Trigger.isBefore && Trigger.isDelete) {
+          Set <Id> accountIds = new Set<Id>();
+          for (Opportunity opp : Trigger.old) {
+             accountIds.add(opp.AccountId);
+          }
+          Map <Id, Account> accountsWithBanking = new Map<Id, Account>();
+          List<Account> accountsForOpps = [SELECT Id, Industry FROM Account WHERE Id IN :accountIds];
+          for (Account acc : accountsForOpps) {
+            if (acc.Industry == 'Banking') {
+              accountsWithBanking.put(acc.Id, acc);
+            }
+          }
+          for (Opportunity opps : Trigger.old) {
+            if (opps.StageName == 'Closed Won' && accountsWithBanking.containsKey(opps.AccountId)) {
+              opps.addError('Cannot delete closed opportunity for a banking account that is won');
+            }
+          }
+          }
 
     if (trigger.isBefore && trigger.isUpdate) {
       Set<Id> accountIds = new Set<Id>();
