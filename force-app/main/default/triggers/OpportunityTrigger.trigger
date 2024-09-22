@@ -1,13 +1,11 @@
-trigger OpportunityTrigger on Opportunity (before update,after update, before delete) {
-  
+trigger OpportunityTrigger on Opportunity (before update, before delete) {
+  if (trigger.isBefore && trigger.isUpdate) {
     for (opportunity opp : Trigger.new) {
       if (opp.Amount < 5000) {
-          opp.addError('Opportunity amount must be greater than 5000');
+          opp.addError('Opportunity amount must be greater than 5000');   
       }
-         }    
-        
-  
-
+    }
+  }
          if (Trigger.isBefore && Trigger.isDelete) {
           Set <Id> accountIds = new Set<Id>();
           for (Opportunity opp : Trigger.old) {
